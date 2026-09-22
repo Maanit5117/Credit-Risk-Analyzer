@@ -4,13 +4,13 @@ An end-to-end machine learning system and institutional underwriting web applica
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 Credit risk assessment is a foundational component of retail banking and institutional lending. **Axiom** combines exploratory data analysis, scikit-learn preprocessing pipelines, XGBoost modeling with hyperparameter tuning, Platt probability calibration, F1-optimal decision thresholding, and TreeSHAP explainability into an intuitive, production-ready web application ready to deploy on Render.
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 The dataset ([`credit_risk_dataset.csv`](credit_risk_dataset.csv)) contains historical loan applications with borrower financial attributes:
 
@@ -31,7 +31,7 @@ The dataset ([`credit_risk_dataset.csv`](credit_risk_dataset.csv)) contains hist
 
 ---
 
-## 🛠️ Methodology & Modeling Pipeline
+## Methodology & Modeling Pipeline
 
 1. **Data Cleaning & Filtering**:
    - Deduplicated raw records.
@@ -65,7 +65,7 @@ The dataset ([`credit_risk_dataset.csv`](credit_risk_dataset.csv)) contains hist
 
 ---
 
-## 📈 Model Performance & Comparison
+## Model Performance & Comparison
 
 | Model | ROC-AUC | Accuracy | Precision | Recall | F1-Score |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -79,7 +79,7 @@ The dataset ([`credit_risk_dataset.csv`](credit_risk_dataset.csv)) contains hist
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 ├── Credit_Risk.ipynb          # Jupyter notebook with EDA, preprocessing, tuning, calibration, and SHAP
@@ -103,7 +103,7 @@ The dataset ([`credit_risk_dataset.csv`](credit_risk_dataset.csv)) contains hist
 
 ---
 
-## 🏛️ Axiom Web Application & Underwriting Suite
+## Axiom Web Application & Underwriting Suite
 
 The project includes an interactive, financial-grade internal web dashboard built for credit risk officers and underwriting teams:
 
@@ -128,30 +128,7 @@ The project includes an interactive, financial-grade internal web dashboard buil
 
 ---
 
-## 🚀 Running Locally
-
-### 1. Set Up Virtual Environment & Dependencies
-
-```bash
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. Launch the Application
-
-```bash
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Open your browser at **`http://localhost:8000`** to access the Credit Underwriting Suite. Interactive API documentation is available at **`http://localhost:8000/docs`**.
-
----
-
-## ☁️ Deployment on Render
+## Deployment on Render
 
 This repository is pre-configured with `render.yaml`, `runtime.txt`, and `Procfile` for seamless zero-configuration deployment to [Render](https://render.com).
 
@@ -177,4 +154,3 @@ This repository is pre-configured with `render.yaml`, `runtime.txt`, and `Procfi
 1. In Render, select **New + > Blueprint**.
 2. Select your repository. Render will automatically detect [`render.yaml`](render.yaml) and configure the build and start commands with zero manual typing.
 3. Click **Apply**.
-
