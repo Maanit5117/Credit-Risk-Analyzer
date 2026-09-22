@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axiom | Credit Risk Analyzer</title>
+  
+  <!-- Institutional Typography: IBM Plex Serif, IBM Plex Sans, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <!-- AXIOM BOOT PRELOADER -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-brand">
+        <div class="preloader-crest">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+            <line x1="12" y1="22" x2="12" y2="15.5"></line>
+            <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+          </svg>
+        </div>
+        <span class="preloader-title">AXIOM</span>
+      </div>
+      <div class="preloader-track">
+        <div class="preloader-indicator"></div>
+      </div>
+      <div class="preloader-status">
+        <span class="preloader-dot"></span>
+        <span class="mono">INITIALIZING RISK ENGINE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    
+    <!-- MINIMALIST SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-crest">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+            <line x1="12" y1="22" x2="12" y2="15.5"></line>
+            <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">AXIOM</span>
+          <span class="brand-subtitle">Credit Risk Model</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-view="assessment">
+          <i data-lucide="calculator"></i>
+          <span>Assessment</span>
+        </button>
+        <button class="nav-link" data-view="history">
+          <i data-lucide="clock"></i>
+          <span>History Log</span>
+          <span class="nav-badge" id="navHistoryCount">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="model-pill">
+          <div class="model-pill-header">
+            <span class="status-dot"></span>
+            <span>Model Active</span>
+          </div>
+          <div class="model-pill-detail">
+            <span>Cutoff: <strong class="mono">67.65% PD</strong></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN APP AREA -->
+    <main class="main-content">
+      
+      <!-- TOP HEADER -->
+      <header class="page-header">
+        <div class="header-left">
+          <h1 class="page-title" id="pageTitle">Credit Risk Assessment</h1>
+          <p class="page-desc" id="pageDesc">Evaluate loan default probability and underwriting decision.</p>
+        </div>
+
+        <!-- Quick One-Click Demo Profiles -->
+        <div class="header-right" id="demoPresetsBar">
+          <span class="preset-label">Quick Fill:</span>
+          <button type="button" class="btn-chip" data-preset="prime">Prime (Low Risk)</button>
+          <button type="button" class="btn-chip" data-preset="subprime">Subprime (High Risk)</button>
+          <button type="button" class="btn-chip secondary" id="btnClearForm">Clear</button>
+        </div>
+      </header>
+
+      <div class="page-body">
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: ASSESSMENT CALCULATOR (PRIMARY)         -->
+        <!-- ============================================== -->
+        <div class="view-panel active" id="view-assessment">
+          <div class="assessment-layout">
+            
+            <!-- LEFT: INPUT FORM -->
+            <div class="card form-card">
+              <div class="card-header">
+                <h2 class="card-title">Applicant & Loan Information</h2>
+              </div>
+
+              <form id="loanForm" class="clean-form" novalidate>
+                
+                <!-- SECTION: APPLICANT -->
+                <div class="fieldset">
+                  <div class="legend">Applicant Profile</div>
+                  
+                  <div class="form-row-2">
+                    <div class="field">
+                      <label for="person_age">Age <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <input type="number" id="person_age" name="person_age" min="18" max="100" value="28" required>
+                        <span class="unit">yrs</span>
+                      </div>
+                      <span class="field-error" id="err_person_age"></span>
+                    </div>
+
+                    <div class="field">
+                      <label for="person_income">Annual Income <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <span class="prefix">$</span>
+                        <input type="number" id="person_income" name="person_income" min="1000" step="1000" value="65000" required>
+                      </div>
+                      <span class="field-error" id="err_person_income"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="field">
+                      <label for="person_emp_length">Employment Length <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <input type="number" id="person_emp_length" name="person_emp_length" min="0" max="60" step="0.5" value="4.0" required>
+                        <span class="unit">yrs</span>
+                      </div>
+                      <span class="field-error" id="err_person_emp_length"></span>
+                    </div>
+
+                    <div class="field">
+                      <label for="person_home_ownership">Home Ownership <span class="req">*</span></label>
+                      <select id="person_home_ownership" name="person_home_ownership" required>
+                        <option value="MORTGAGE">Mortgage</option>
+                        <option value="RENT" selected>Rent</option>
+                        <option value="OWN">Own</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                      <span class="field-error" id="err_person_home_ownership"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SECTION: LOAN & CREDIT -->
+                <div class="fieldset">
+                  <div class="legend">Loan Facility & Credit Record</div>
+
+                  <div class="form-row-2">
+                    <div class="field">
+                      <label for="loan_amnt">Requested Loan Amount <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <span class="prefix">$</span>
+                        <input type="number" id="loan_amnt" name="loan_amnt" min="500" step="500" value="10000" required>
+                      </div>
+                      <span class="field-error" id="err_loan_amnt"></span>
+                    </div>
+
+                    <div class="field">
+                      <label for="loan_intent">Loan Purpose <span class="req">*</span></label>
+                      <select id="loan_intent" name="loan_intent" required>
+                        <option value="PERSONAL" selected>Personal</option>
+                        <option value="EDUCATION">Education</option>
+                        <option value="MEDICAL">Medical</option>
+                        <option value="VENTURE">Business / Venture</option>
+                        <option value="HOMEIMPROVEMENT">Home Improvement</option>
+                        <option value="DEBTCONSOLIDATION">Debt Consolidation</option>
+                      </select>
+                      <span class="field-error" id="err_loan_intent"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row-3">
+                    <div class="field">
+                      <label for="loan_grade">Loan Grade <span class="req">*</span></label>
+                      <select id="loan_grade" name="loan_grade" required>
+                        <option value="A">Grade A</option>
+                        <option value="B" selected>Grade B</option>
+                        <option value="C">Grade C</option>
+                        <option value="D">Grade D</option>
+                        <option value="E">Grade E</option>
+                        <option value="F">Grade F</option>
+                        <option value="G">Grade G</option>
+                      </select>
+                      <span class="field-error" id="err_loan_grade"></span>
+                    </div>
+
+                    <div class="field">
+                      <label for="loan_int_rate">Interest Rate (%) <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <input type="number" id="loan_int_rate" name="loan_int_rate" min="1.0" max="35.0" step="0.1" value="10.5" required>
+                        <span class="unit">%</span>
+                      </div>
+                      <span class="field-error" id="err_loan_int_rate"></span>
+                    </div>
+
+                    <div class="field">
+                      <label for="cb_person_cred_hist_length">Credit History <span class="req">*</span></label>
+                      <div class="input-addon">
+                        <input type="number" id="cb_person_cred_hist_length" name="cb_person_cred_hist_length" min="0" max="60" value="5" required>
+                        <span class="unit">yrs</span>
+                      </div>
+                      <span class="field-error" id="err_cb_person_cred_hist_length"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row-2 align-center">
+                    <div class="field">
+                      <label>Prior Bureau Default <span class="req">*</span></label>
+                      <div class="binary-switch">
+                        <button type="button" class="switch-btn active" data-val="N">No Default (N)</button>
+                        <button type="button" class="switch-btn" data-val="Y">Prior Default (Y)</button>
+                        <input type="hidden" id="cb_person_default_on_file" name="cb_person_default_on_file" value="N">
+                      </div>
+                    </div>
+
+                    <!-- Clean DTI Display -->
+                    <div class="dti-preview-box">
+                      <span class="dti-preview-label">Loan-to-Income (DTI):</span>
+                      <strong class="dti-preview-val mono" id="dtiLiveText">15.4%</strong>
+                      <input type="hidden" id="loan_percent_income" name="loan_percent_income" value="0.1538">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBMIT ACTION -->
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                  <i data-lucide="check-circle-2"></i>
+                  <span>Check Credit Risk</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- RIGHT: RESULTS CARD -->
+            <div class="card results-card" id="resultsCard">
+              
+              <!-- PLACEHOLDER BEFORE FIRST EVALUATION -->
+              <div class="placeholder-state" id="placeholderState">
+                <div class="placeholder-icon">
+                  <i data-lucide="arrow-left"></i>
+                </div>
+                <h3>Ready for Evaluation</h3>
+                <p>Enter the applicant's details on the left, or pick one of the quick demo buttons above, then click <strong>Check Credit Risk</strong>.</p>
+              </div>
+
+              <!-- RESULTS DISPLAY -->
+              <div class="results-state hidden" id="resultsState">
+                
+                <!-- DECISION BANNER -->
+                <div class="decision-banner" id="decisionBanner">
+                  <div class="decision-top">
+                    <span class="decision-action" id="decisionAction">APPROVED</span>
+                    <span class="tier-pill" id="decisionTierPill">Low Risk</span>
+                  </div>
+                  <p class="decision-explanation" id="decisionExplanation">
+                    Applicant meets low risk criteria. Default probability is well below the policy threshold.
+                  </p>
+                </div>
+
+                <!-- KEY METRICS ROW -->
+                <div class="stats-row">
+                  <div class="stat-box">
+                    <span class="stat-label">Default Probability</span>
+                    <span class="stat-value mono" id="statPd">1.8%</span>
+                    <span class="stat-sub mono" id="statThresholdSub">Cutoff: 67.7%</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Credit Score</span>
+                    <span class="stat-value mono" id="statScore">840</span>
+                    <span class="stat-sub">300 - 850 Scale</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Loan / Income</span>
+                    <span class="stat-value mono" id="statDti">15.4%</span>
+                    <span class="stat-sub">Healthy &lt; 35%</span>
+                  </div>
+                </div>
+
+                <!-- RISK GAUGE METER -->
+                <div class="gauge-section">
+                  <div class="gauge-header">
+                    <span class="section-label">Risk Spectrum Meter</span>
+                    <span class="cutoff-tag mono">Threshold: 67.65%</span>
+                  </div>
+                  
+                  <div class="dial-container">
+                    <svg viewBox="0 0 220 125" class="dial-svg">
+                      <!-- Background Track -->
+                      <path d="M 20 115 A 90 90 0 0 1 200 115" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
+                      <!-- Low Risk Arc (Green) -->
+                      <path d="M 20 115 A 90 90 0 0 1 46.4 51.3" fill="none" stroke="#16a34a" stroke-width="12" stroke-linecap="round"/>
+                      <!-- Medium Risk Arc (Amber) -->
+                      <path d="M 46.4 51.3 A 90 90 0 0 1 163.6 48.0" fill="none" stroke="#d97706" stroke-width="12"/>
+                      <!-- High Risk Arc (Red) -->
+                      <path d="M 163.6 48.0 A 90 90 0 0 1 200 115" fill="none" stroke="#dc2626" stroke-width="12" stroke-linecap="round"/>
+                      <!-- Cutoff line indicator at 67.65% -->
+                      <line x1="163.6" y1="48.0" x2="175" y2="35" stroke="#991b1b" stroke-width="2.5"/>
+                      
+                      <!-- Center Pin and Needle -->
+                      <circle cx="110" cy="115" r="6" fill="#0f172a"/>
+                      <circle cx="110" cy="115" r="2.5" fill="#ffffff"/>
+                      <line id="dialNeedle" x1="110" y1="115" x2="30" y2="110" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+
+                    <div class="dial-labels">
+                      <span class="label-low">Low Risk (&lt;25%)</span>
+                      <span class="label-med">Medium Risk (25-67%)</span>
+                      <span class="label-high">High Risk (&gt;67%)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- KEY CONTRIBUTING FACTORS (HORIZONTAL BARS) -->
+                <div class="factors-section">
+                  <div class="factors-header">
+                    <span class="section-label">Top Decision Factors</span>
+                    <span class="factors-hint">What influenced this outcome</span>
+                  </div>
+                  <div class="factors-list" id="factorsList">
+                    <!-- Injected dynamically -->
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: HISTORY LOG (SIMPLIFIED)                -->
+        <!-- ============================================== -->
+        <div class="view-panel" id="view-history">
+          <div class="card history-card">
+            <div class="card-header history-header-bar">
+              <div>
+                <h2 class="card-title">Assessment History</h2>
+                <p class="card-desc">Recent applications evaluated during this session.</p>
+              </div>
+              <button type="button" class="btn-download" id="btnExportCsv">
+                <i data-lucide="download"></i>
+                <span>Download CSV</span>
+              </button>
+            </div>
+
+            <div class="table-wrap">
+              <table class="clean-table" id="historyTable">
+                <thead>
+                  <tr>
+                    <th>Ref ID</th>
+                    <th>Time</th>
+                    <th>Income</th>
+                    <th>Loan</th>
+                    <th>Purpose</th>
+                    <th>Default Prob</th>
+                    <th>Risk Tier</th>
+                    <th>Decision</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- JavaScript -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
